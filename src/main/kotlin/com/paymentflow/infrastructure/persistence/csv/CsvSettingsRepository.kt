@@ -46,7 +46,7 @@ class CsvSettingsRepository(
 
     private fun readAllSettings(): Map<String, String> {
         val data = csvHelper.readCsvAsMap(filePath)
-        return data.associate { it["key"] ?: "" to (it["value"] ?: "") }
+        return data.associate { (it["key"] ?: "") to (it["value"] ?: "") }
     }
 
     private fun writeAllSettings(settings: Map<String, String>) {

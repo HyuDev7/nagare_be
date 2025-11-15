@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(mkdir:*)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(./gradlew clean build:*)",
+      "Bash(./gradlew bootRun)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
