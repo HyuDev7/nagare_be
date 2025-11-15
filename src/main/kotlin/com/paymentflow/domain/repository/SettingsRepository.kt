@@ -1,0 +1,28 @@
+package com.paymentflow.domain.repository
+
+import java.math.BigDecimal
+
+/**
+ * 設定リポジトリインターフェース
+ */
+interface SettingsRepository {
+    /**
+     * 設定値を取得
+     */
+    fun get(key: String): String?
+
+    /**
+     * 設定値を保存
+     */
+    fun set(key: String, value: String)
+
+    /**
+     * 月次予算を取得
+     */
+    fun getMonthlyBudget(): BigDecimal?
+
+    /**
+     * 月次予算を設定
+     */
+    fun setMonthlyBudget(budget: BigDecimal)
+}
