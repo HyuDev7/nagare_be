@@ -1,0 +1,4 @@
+id,name,type,assetAccountId,closingDay,withdrawalDay,memo,createdAt,updatedAt
+pm_001,楽天カード,CREDIT_CARD,acc_001,31,27,メインカード,2025-01-01T00:00:00Z,2025-01-01T00:00:00Z
+pm_002,デビットカード,DEBIT_CARD,acc_001,,,給油用,2025-01-01T00:00:00Z,2025-01-01T00:00:00Z
+pm_003,現金,CASH,acc_001,,,,2025-01-01T00:00:00Z,2025-01-01T00:00:00Z

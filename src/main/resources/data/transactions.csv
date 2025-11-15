@@ -1,0 +1,3 @@
+id,date,amount,type,paymentMethodId,categoryId,memo,withdrawalDate,isWithdrawn,createdAt,updatedAt
+tx_001,2025-03-15,5000.00,EXPENSE,pm_001,cat_001,スーパーで買い物,2025-04-27,false,2025-03-15T14:30:00Z,2025-03-15T14:30:00Z
+tx_002,2025-03-20,300000.00,INCOME,pm_002,cat_009,3月給与,2025-03-20,true,2025-03-20T09:00:00Z,2025-03-20T09:00:00Z
