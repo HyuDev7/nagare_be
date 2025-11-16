@@ -1,3 +1,3 @@
-id,date,amount,type,paymentMethodId,categoryId,memo,withdrawalDate,isWithdrawn,createdAt,updatedAt
-tx_001,2025-03-15,5000.00,EXPENSE,pm_001,cat_001,スーパーで買い物,2025-04-27,false,2025-03-15T14:30:00Z,2025-03-15T14:30:00Z
-tx_002,2025-03-20,300000.00,INCOME,pm_002,cat_009,3月給与,2025-03-20,true,2025-03-20T09:00:00Z,2025-03-20T09:00:00Z
+id,date,amount,type,paymentMethodId,categoryId,memo,withdrawalDate,isWithdrawn,isDeleted,createdAt,updatedAt
+tx_002,2025-03-20,300000.00,INCOME,pm_002,cat_009,3月給与,2025-03-20,true,false,2025-03-20T09:00:00,2025-03-20T09:00:00
+tx_0a218af7-4bf6-4eb6-b504-9878a9777c77,2025-11-16,387,EXPENSE,pm_003,cat_008,,2025-11-16,true,false,2025-11-16T16:31:07.46703,2025-11-16T16:31:07.46703

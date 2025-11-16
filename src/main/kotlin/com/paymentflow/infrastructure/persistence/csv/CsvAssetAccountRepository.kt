@@ -27,11 +27,44 @@ class CsvAssetAccountRepository(
         return data.firstOrNull()?.let { mapToAssetAccount(it) }
     }
 
+    override fun findAll(): List<AssetAccount> {
+        val data = csvHelper.readCsvAsMap(filePath)
+        return data.map { mapToAssetAccount(it) }
+    }
+
+    override fun findById(id: String): AssetAccount? {
+        val data = csvHelper.readCsvAsMap(filePath)
+        return data.find { it["id"] == id }?.let { mapToAssetAccount(it) }
+    }
+
     override fun save(assetAccount: AssetAccount): AssetAccount {
         val headers = listOf("id", "name", "balance", "createdAt", "updatedAt")
-        val data = listOf(assetAccountToMap(assetAccount))
+        val allAccounts = findAll().toMutableList()
+        val index = allAccounts.indexOfFirst { it.id == assetAccount.id }
+
+        if (index >= 0) {
+            allAccounts[index] = assetAccount
+        } else {
+            allAccounts.add(assetAccount)
+        }
+
+        val data = allAccounts.map { assetAccountToMap(it) }
         csvHelper.writeCsvFromMap(filePath, headers, data)
         return assetAccount
+    }
+
+    override fun delete(id: String): Boolean {
+        val headers = listOf("id", "name", "balance", "createdAt", "updatedAt")
+        val allAccounts = findAll()
+        val filtered = allAccounts.filter { it.id != id }
+
+        if (filtered.size == allAccounts.size) {
+            return false
+        }
+
+        val data = filtered.map { assetAccountToMap(it) }
+        csvHelper.writeCsvFromMap(filePath, headers, data)
+        return true
     }
 
     private fun mapToAssetAccount(map: Map<String, String>): AssetAccount {

@@ -27,7 +27,7 @@ class CsvTransactionRepository(
 
     override fun findAll(): List<Transaction> {
         val data = csvHelper.readCsvAsMap(filePath)
-        return data.map { mapToTransaction(it) }
+        return data.map { mapToTransaction(it) }.filter { !it.isDeleted }
     }
 
     override fun findById(id: String): Transaction? {
@@ -96,7 +96,7 @@ class CsvTransactionRepository(
     private fun saveAll(transactions: List<Transaction>) {
         val headers = listOf(
             "id", "date", "amount", "type", "paymentMethodId",
-            "categoryId", "memo", "withdrawalDate", "isWithdrawn", "createdAt", "updatedAt"
+            "categoryId", "memo", "withdrawalDate", "isWithdrawn", "isDeleted", "createdAt", "updatedAt"
         )
         val data = transactions.map { transactionToMap(it) }
         csvHelper.writeCsvFromMap(filePath, headers, data)
@@ -119,6 +119,7 @@ class CsvTransactionRepository(
             withdrawalDate = map["withdrawalDate"]?.takeIf { it.isNotBlank() }
                 ?.let { LocalDate.parse(it, dateFormatter) },
             isWithdrawn = map["isWithdrawn"]?.toBoolean() ?: false,
+            isDeleted = map["isDeleted"]?.toBoolean() ?: false,
             createdAt = map["createdAt"]?.let { LocalDateTime.parse(it, dateTimeFormatter) }
                 ?: throw IllegalArgumentException("createdAt is required"),
             updatedAt = map["updatedAt"]?.let { LocalDateTime.parse(it, dateTimeFormatter) }
@@ -137,6 +138,7 @@ class CsvTransactionRepository(
             "memo" to (transaction.memo ?: ""),
             "withdrawalDate" to (transaction.withdrawalDate?.format(dateFormatter) ?: ""),
             "isWithdrawn" to transaction.isWithdrawn.toString(),
+            "isDeleted" to transaction.isDeleted.toString(),
             "createdAt" to transaction.createdAt.format(dateTimeFormatter),
             "updatedAt" to transaction.updatedAt.format(dateTimeFormatter)
         )

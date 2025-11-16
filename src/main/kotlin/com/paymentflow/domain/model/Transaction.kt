@@ -17,6 +17,7 @@ data class Transaction(
     val memo: String? = null,               // メモ
     val withdrawalDate: LocalDate? = null,  // 実際の引き落とし日
     val isWithdrawn: Boolean = false,       // 引き落とし済みフラグ
+    val isDeleted: Boolean = false,         // 削除フラグ（論理削除）
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
 ) {

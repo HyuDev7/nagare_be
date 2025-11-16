@@ -157,6 +157,46 @@ class TransactionUseCase(
     }
 
     /**
+     * 取引をキャンセル（論理削除）
+     * 引き落とし済みの取引もキャンセル可能で、資産残高を調整する
+     */
+    fun cancelTransaction(id: String): Transaction {
+        val transaction = transactionRepository.findById(id)
+            ?: throw IllegalArgumentException("取引が見つかりません: $id")
+
+        // すでにキャンセル済みの場合はエラー
+        if (transaction.isDeleted) {
+            throw IllegalStateException("この取引はすでにキャンセルされています")
+        }
+
+        // 引き落とし済みの場合は資産残高を戻す
+        if (transaction.isWithdrawn) {
+            val account = assetAccountRepository.find()
+                ?: throw IllegalStateException("資産アカウントが存在しません")
+
+            val updatedAccount = when (transaction.type) {
+                TransactionType.EXPENSE -> {
+                    // 支出をキャンセルするので資産を戻す
+                    account.addIncome(transaction.amount)
+                }
+                TransactionType.INCOME -> {
+                    // 収入をキャンセルするので資産から減らす
+                    account.subtractExpense(transaction.amount)
+                }
+            }
+            assetAccountRepository.save(updatedAccount)
+        }
+
+        // 論理削除
+        val cancelled = transaction.copy(
+            isDeleted = true,
+            updatedAt = LocalDateTime.now()
+        )
+
+        return transactionRepository.save(cancelled)
+    }
+
+    /**
      * 引き落とし処理を実行
      * 指定日までの未引き落とし取引を処理
      */
