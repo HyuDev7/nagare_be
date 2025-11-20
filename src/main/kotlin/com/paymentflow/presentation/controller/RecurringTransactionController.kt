@@ -44,6 +44,28 @@ class RecurringTransactionController(
         return ResponseEntity.ok(RecurringTransactionResponse.from(recurring))
     }
 
+    @PutMapping("/{id}")
+    fun updateRecurringTransaction(
+        @PathVariable id: String,
+        @RequestBody request: CreateRecurringTransactionRequest
+    ): ResponseEntity<RecurringTransactionResponse> {
+        val recurring = recurringTransactionUseCase.updateRecurringTransactionFull(
+            id = id,
+            name = request.name,
+            amount = request.amount,
+            type = request.type,
+            paymentMethodId = request.paymentMethodId,
+            categoryId = request.categoryId,
+            frequency = request.frequency,
+            startDate = request.startDate,
+            endDate = request.endDate,
+            dayOfMonth = request.dayOfMonth,
+            dayOfWeek = request.dayOfWeek,
+            memo = request.memo
+        )
+        return ResponseEntity.ok(RecurringTransactionResponse.from(recurring))
+    }
+
     @PutMapping("/{id}/activate")
     fun activateRecurringTransaction(@PathVariable id: String): ResponseEntity<RecurringTransactionResponse> {
         val recurring = recurringTransactionUseCase.updateRecurringTransaction(id, null, null, true)
@@ -65,6 +87,12 @@ class RecurringTransactionController(
     @PostMapping("/execute")
     fun executeRecurringTransactions(): ResponseEntity<Void> {
         recurringTransactionUseCase.executeRecurringTransactionsForToday()
+        return ResponseEntity.ok().build()
+    }
+
+    @PostMapping("/check")
+    fun checkPendingRecurringTransactions(): ResponseEntity<Void> {
+        recurringTransactionUseCase.checkAndExecutePendingRecurringTransactions()
         return ResponseEntity.ok().build()
     }
 }

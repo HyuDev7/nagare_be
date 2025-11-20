@@ -62,8 +62,8 @@ class TransactionUseCaseTest {
         )
 
         every { paymentMethodRepository.findById("pm_001") } returns paymentMethod
+        every { assetAccountRepository.findById("acc_001") } returns assetAccount
         every { withdrawalCalculator.calculateWithdrawalDate(any(), paymentMethod) } returns LocalDate.now()
-        every { assetAccountRepository.find() } returns assetAccount
         every { transactionRepository.save(any()) } answers { firstArg() }
         every { assetAccountRepository.save(any()) } answers { firstArg() }
 
@@ -74,6 +74,7 @@ class TransactionUseCaseTest {
             type = TransactionType.EXPENSE,
             paymentMethodId = "pm_001",
             categoryId = "cat_001",
+            assetAccountId = "acc_001",
             memo = "テスト"
         )
 
@@ -93,6 +94,7 @@ class TransactionUseCaseTest {
             type = TransactionType.EXPENSE,
             paymentMethodId = "pm_001",
             categoryId = "cat_001",
+            assetAccountId = "acc_001",
             memo = null,
             withdrawalDate = LocalDate.now(),
             isWithdrawn = true,
@@ -119,6 +121,7 @@ class TransactionUseCaseTest {
             type = TransactionType.EXPENSE,
             paymentMethodId = "pm_001",
             categoryId = "cat_001",
+            assetAccountId = "acc_001",
             memo = null,
             withdrawalDate = LocalDate.now(),
             isWithdrawn = true,
@@ -136,7 +139,7 @@ class TransactionUseCaseTest {
         )
 
         every { transactionRepository.findById("tx_001") } returns transaction
-        every { assetAccountRepository.find() } returns assetAccount
+        every { assetAccountRepository.findById("acc_001") } returns assetAccount
         every { transactionRepository.save(any()) } answers { firstArg() }
         every { assetAccountRepository.save(any()) } answers { firstArg() }
 
@@ -159,6 +162,7 @@ class TransactionUseCaseTest {
                 type = TransactionType.EXPENSE,
                 paymentMethodId = "pm_001",
                 categoryId = "cat_001",
+                assetAccountId = "acc_001",
                 memo = null,
                 withdrawalDate = LocalDate.now(),
                 isWithdrawn = false,
@@ -173,6 +177,7 @@ class TransactionUseCaseTest {
                 type = TransactionType.EXPENSE,
                 paymentMethodId = "pm_001",
                 categoryId = "cat_001",
+                assetAccountId = "acc_001",
                 memo = null,
                 withdrawalDate = LocalDate.now(),
                 isWithdrawn = false,

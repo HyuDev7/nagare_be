@@ -18,6 +18,7 @@ data class TransactionResponse(
     val type: TransactionType,
     val paymentMethod: PaymentMethodInfo,
     val category: CategoryInfo,
+    val assetAccountId: String,
     val memo: String?,
     val withdrawalDate: LocalDate?,
     val isWithdrawn: Boolean,
@@ -53,6 +54,7 @@ data class TransactionResponse(
                     id = category.id,
                     name = category.name
                 ),
+                assetAccountId = transaction.assetAccountId,
                 memo = transaction.memo,
                 withdrawalDate = transaction.withdrawalDate,
                 isWithdrawn = transaction.isWithdrawn,

@@ -38,3 +38,6 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+### Data files ###
+src/main/resources/data/*.csv

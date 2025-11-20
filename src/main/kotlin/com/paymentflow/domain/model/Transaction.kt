@@ -14,6 +14,7 @@ data class Transaction(
     val type: TransactionType,              // 支出/収入
     val paymentMethodId: String,            // 支払い手段ID
     val categoryId: String,                 // カテゴリID
+    val assetAccountId: String,             // 資産アカウントID
     val memo: String? = null,               // メモ
     val withdrawalDate: LocalDate? = null,  // 実際の引き落とし日
     val isWithdrawn: Boolean = false,       // 引き落とし済みフラグ

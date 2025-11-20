@@ -101,6 +101,7 @@ class StatisticsUseCaseTest {
             type = type,
             paymentMethodId = paymentMethodId,
             categoryId = "cat_001",
+            assetAccountId = "acc_001",
             memo = null,
             withdrawalDate = date,
             isWithdrawn = false,

@@ -6,6 +6,7 @@ import com.paymentflow.application.usecase.TransactionUseCase
 import com.paymentflow.domain.model.TransactionType
 import com.paymentflow.presentation.dto.request.CreateTransactionRequest
 import com.paymentflow.presentation.dto.request.UpdateTransactionRequest
+import com.paymentflow.presentation.dto.response.PaginatedResponse
 import com.paymentflow.presentation.dto.response.TransactionResponse
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpHeaders
@@ -25,7 +26,8 @@ import java.time.format.DateTimeFormatter
 class TransactionController(
     private val transactionUseCase: TransactionUseCase,
     private val paymentMethodUseCase: PaymentMethodUseCase,
-    private val categoryUseCase: CategoryUseCase
+    private val categoryUseCase: CategoryUseCase,
+    private val assetAccountUseCase: com.paymentflow.application.usecase.AssetAccountUseCase
 ) {
     /**
      * 取引一覧取得（クエリパラメータでフィルタ）
@@ -36,9 +38,11 @@ class TransactionController(
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) to: LocalDate?,
         @RequestParam(required = false) categoryId: String?,
         @RequestParam(required = false) paymentMethodId: String?,
-        @RequestParam(required = false) type: TransactionType?
-    ): ResponseEntity<List<TransactionResponse>> {
-        val transactions = transactionUseCase.getTransactionsByFilter(
+        @RequestParam(required = false) type: TransactionType?,
+        @RequestParam(defaultValue = "1") page: Int,
+        @RequestParam(defaultValue = "50") pageSize: Int
+    ): ResponseEntity<PaginatedResponse<TransactionResponse>> {
+        val allTransactions = transactionUseCase.getTransactionsByFilter(
             from = from,
             to = to,
             categoryId = categoryId,
@@ -46,7 +50,8 @@ class TransactionController(
             type = type
         )
 
-        val response = transactions.mapNotNull { transaction ->
+        // 全取引をレスポンスに変換
+        val allResponses = allTransactions.mapNotNull { transaction ->
             val paymentMethod = paymentMethodUseCase.getPaymentMethodById(transaction.paymentMethodId)
             val category = categoryUseCase.getCategoryById(transaction.categoryId)
 
@@ -56,6 +61,26 @@ class TransactionController(
                 null
             }
         }
+
+        // ページネーション処理
+        val totalCount = allResponses.size
+        val totalPages = if (pageSize > 0) (totalCount + pageSize - 1) / pageSize else 1
+        val startIndex = (page - 1) * pageSize
+        val endIndex = minOf(startIndex + pageSize, totalCount)
+
+        val paginatedData = if (startIndex < totalCount) {
+            allResponses.subList(startIndex, endIndex)
+        } else {
+            emptyList()
+        }
+
+        val response = PaginatedResponse(
+            data = paginatedData,
+            page = page,
+            pageSize = pageSize,
+            totalCount = totalCount,
+            totalPages = totalPages
+        )
 
         return ResponseEntity.ok(response)
     }
@@ -90,6 +115,7 @@ class TransactionController(
             type = request.type,
             paymentMethodId = request.paymentMethodId,
             categoryId = request.categoryId,
+            assetAccountId = request.assetAccountId,
             memo = request.memo
         )
 
@@ -115,6 +141,7 @@ class TransactionController(
             type = request.type,
             paymentMethodId = request.paymentMethodId,
             categoryId = request.categoryId,
+            assetAccountId = request.assetAccountId,
             memo = request.memo
         )
 
@@ -216,6 +243,10 @@ class TransactionController(
         }
 
         try {
+            // デフォルトの資産アカウントを取得
+            val defaultAssetAccount = assetAccountUseCase.getAllAssetAccounts().firstOrNull()
+                ?: return ResponseEntity.badRequest().body(mapOf("error" to "資産アカウントが存在しません"))
+
             val content = String(file.bytes, Charsets.UTF_8)
             val lines = content.lines().drop(1)  // ヘッダー行をスキップ
 
@@ -273,6 +304,7 @@ class TransactionController(
                         type = type,
                         paymentMethodId = paymentMethod.id,
                         categoryId = category.id,
+                        assetAccountId = defaultAssetAccount.id,
                         memo = memo
                     )
 

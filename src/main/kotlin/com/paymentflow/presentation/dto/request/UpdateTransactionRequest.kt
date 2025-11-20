@@ -13,5 +13,6 @@ data class UpdateTransactionRequest(
     val type: TransactionType,
     val paymentMethodId: String,
     val categoryId: String,
+    val assetAccountId: String,
     val memo: String? = null
 )

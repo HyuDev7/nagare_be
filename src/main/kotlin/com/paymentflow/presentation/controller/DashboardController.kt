@@ -17,8 +17,10 @@ class DashboardController(
      * ダッシュボードデータ取得
      */
     @GetMapping
-    fun getDashboard(): ResponseEntity<DashboardResponse> {
-        val dashboardData = dashboardUseCase.getDashboardData()
+    fun getDashboard(
+        @RequestParam(required = false) assetAccountId: String?
+    ): ResponseEntity<DashboardResponse> {
+        val dashboardData = dashboardUseCase.getDashboardData(assetAccountId)
         return ResponseEntity.ok(DashboardResponse.from(dashboardData))
     }
 }

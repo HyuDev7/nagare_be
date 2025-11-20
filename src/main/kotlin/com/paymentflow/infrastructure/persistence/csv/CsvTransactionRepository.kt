@@ -96,7 +96,7 @@ class CsvTransactionRepository(
     private fun saveAll(transactions: List<Transaction>) {
         val headers = listOf(
             "id", "date", "amount", "type", "paymentMethodId",
-            "categoryId", "memo", "withdrawalDate", "isWithdrawn", "isDeleted", "createdAt", "updatedAt"
+            "categoryId", "assetAccountId", "memo", "withdrawalDate", "isWithdrawn", "isDeleted", "createdAt", "updatedAt"
         )
         val data = transactions.map { transactionToMap(it) }
         csvHelper.writeCsvFromMap(filePath, headers, data)
@@ -115,6 +115,8 @@ class CsvTransactionRepository(
                 ?: throw IllegalArgumentException("paymentMethodId is required"),
             categoryId = map["categoryId"]
                 ?: throw IllegalArgumentException("categoryId is required"),
+            assetAccountId = map["assetAccountId"]
+                ?: "default", // 既存データ用のデフォルト値
             memo = map["memo"]?.takeIf { it.isNotBlank() },
             withdrawalDate = map["withdrawalDate"]?.takeIf { it.isNotBlank() }
                 ?.let { LocalDate.parse(it, dateFormatter) },
@@ -135,6 +137,7 @@ class CsvTransactionRepository(
             "type" to transaction.type.name,
             "paymentMethodId" to transaction.paymentMethodId,
             "categoryId" to transaction.categoryId,
+            "assetAccountId" to transaction.assetAccountId,
             "memo" to (transaction.memo ?: ""),
             "withdrawalDate" to (transaction.withdrawalDate?.format(dateFormatter) ?: ""),
             "isWithdrawn" to transaction.isWithdrawn.toString(),

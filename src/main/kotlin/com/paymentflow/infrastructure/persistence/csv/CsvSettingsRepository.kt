@@ -23,6 +23,7 @@ class CsvSettingsRepository(
 
     companion object {
         private const val MONTHLY_BUDGET_KEY = "monthly_budget"
+        private const val LAST_RECURRING_CHECK_DATE_KEY = "last_recurring_transaction_check_date"
     }
 
     override fun get(key: String): String? {
@@ -42,6 +43,14 @@ class CsvSettingsRepository(
 
     override fun setMonthlyBudget(budget: BigDecimal) {
         set(MONTHLY_BUDGET_KEY, budget.toString())
+    }
+
+    override fun getLastRecurringTransactionCheckDate(): java.time.LocalDate? {
+        return get(LAST_RECURRING_CHECK_DATE_KEY)?.let { java.time.LocalDate.parse(it) }
+    }
+
+    override fun setLastRecurringTransactionCheckDate(date: java.time.LocalDate) {
+        set(LAST_RECURRING_CHECK_DATE_KEY, date.toString())
     }
 
     private fun readAllSettings(): Map<String, String> {

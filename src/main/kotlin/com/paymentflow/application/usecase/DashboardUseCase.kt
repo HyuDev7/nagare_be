@@ -22,10 +22,16 @@ class DashboardUseCase(
 ) {
     /**
      * ダッシュボードデータを取得
+     * @param assetAccountId 資産アカウントID（指定しない場合はデフォルトアカウント）
      */
-    fun getDashboardData(): DashboardData {
-        val assetAccount = assetAccountRepository.find()
-            ?: throw IllegalStateException("資産アカウントが存在しません")
+    fun getDashboardData(assetAccountId: String? = null): DashboardData {
+        val assetAccount = if (assetAccountId != null) {
+            assetAccountRepository.findById(assetAccountId)
+                ?: throw IllegalArgumentException("指定された資産アカウントが見つかりません: $assetAccountId")
+        } else {
+            assetAccountRepository.find()
+                ?: throw IllegalStateException("資産アカウントが存在しません")
+        }
 
         // 当月の開始日と終了日
         val currentMonth = YearMonth.now()

@@ -1,6 +1,7 @@
 package com.paymentflow.domain.repository
 
 import java.math.BigDecimal
+import java.time.LocalDate
 
 /**
  * 設定リポジトリインターフェース
@@ -25,4 +26,14 @@ interface SettingsRepository {
      * 月次予算を設定
      */
     fun setMonthlyBudget(budget: BigDecimal)
+
+    /**
+     * 定期取引の最終チェック日を取得
+     */
+    fun getLastRecurringTransactionCheckDate(): LocalDate?
+
+    /**
+     * 定期取引の最終チェック日を設定
+     */
+    fun setLastRecurringTransactionCheckDate(date: LocalDate)
 }

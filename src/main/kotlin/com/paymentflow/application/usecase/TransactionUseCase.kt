@@ -60,11 +60,16 @@ class TransactionUseCase(
         type: TransactionType,
         paymentMethodId: String,
         categoryId: String,
+        assetAccountId: String,
         memo: String? = null
     ): Transaction {
         // 支払い手段を取得
         val paymentMethod = paymentMethodRepository.findById(paymentMethodId)
             ?: throw IllegalArgumentException("支払い手段が見つかりません: $paymentMethodId")
+
+        // 資産アカウントを取得
+        val assetAccount = assetAccountRepository.findById(assetAccountId)
+            ?: throw IllegalArgumentException("資産アカウントが見つかりません: $assetAccountId")
 
         // 引き落とし日を計算
         val withdrawalDate = withdrawalCalculator.calculateWithdrawalDate(date, paymentMethod)
@@ -80,6 +85,7 @@ class TransactionUseCase(
             type = type,
             paymentMethodId = paymentMethodId,
             categoryId = categoryId,
+            assetAccountId = assetAccountId,
             memo = memo,
             withdrawalDate = withdrawalDate,
             isWithdrawn = isImmediateWithdrawal,
@@ -106,6 +112,7 @@ class TransactionUseCase(
         type: TransactionType,
         paymentMethodId: String,
         categoryId: String,
+        assetAccountId: String,
         memo: String? = null
     ): Transaction {
         val existing = transactionRepository.findById(id)
@@ -120,6 +127,10 @@ class TransactionUseCase(
         val paymentMethod = paymentMethodRepository.findById(paymentMethodId)
             ?: throw IllegalArgumentException("支払い手段が見つかりません: $paymentMethodId")
 
+        // 資産アカウントを取得
+        val assetAccount = assetAccountRepository.findById(assetAccountId)
+            ?: throw IllegalArgumentException("資産アカウントが見つかりません: $assetAccountId")
+
         // 引き落とし日を再計算
         val withdrawalDate = withdrawalCalculator.calculateWithdrawalDate(date, paymentMethod)
         val isImmediateWithdrawal = paymentMethod.isImmediateWithdrawal()
@@ -131,6 +142,7 @@ class TransactionUseCase(
             type = type,
             paymentMethodId = paymentMethodId,
             categoryId = categoryId,
+            assetAccountId = assetAccountId,
             memo = memo,
             withdrawalDate = withdrawalDate,
             isWithdrawn = isImmediateWithdrawal,
@@ -171,8 +183,8 @@ class TransactionUseCase(
 
         // 引き落とし済みの場合は資産残高を戻す
         if (transaction.isWithdrawn) {
-            val account = assetAccountRepository.find()
-                ?: throw IllegalStateException("資産アカウントが存在しません")
+            val account = assetAccountRepository.findById(transaction.assetAccountId)
+                ?: throw IllegalStateException("資産アカウントが存在しません: ${transaction.assetAccountId}")
 
             val updatedAccount = when (transaction.type) {
                 TransactionType.EXPENSE -> {
@@ -207,8 +219,8 @@ class TransactionUseCase(
         pendingTransactions.forEach { transaction ->
             // 資産から引き落とし
             if (transaction.type == TransactionType.EXPENSE) {
-                val account = assetAccountRepository.find()
-                    ?: throw IllegalStateException("資産アカウントが存在しません")
+                val account = assetAccountRepository.findById(transaction.assetAccountId)
+                    ?: throw IllegalStateException("資産アカウントが存在しません: ${transaction.assetAccountId}")
                 val updatedAccount = account.subtractExpense(transaction.amount)
                 assetAccountRepository.save(updatedAccount)
             }
@@ -234,8 +246,8 @@ class TransactionUseCase(
      * 資産アカウントの残高を更新
      */
     private fun updateAssetAccountBalance(transaction: Transaction, isImmediateWithdrawal: Boolean) {
-        val account = assetAccountRepository.find()
-            ?: throw IllegalStateException("資産アカウントが存在しません")
+        val account = assetAccountRepository.findById(transaction.assetAccountId)
+            ?: throw IllegalStateException("資産アカウントが存在しません: ${transaction.assetAccountId}")
 
         val updatedAccount = when {
             // 収入の場合は即座に資産に追加
