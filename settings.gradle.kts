@@ -1,1 +1,1 @@
-rootProject.name = "paymentflow-backend"
+rootProject.name = "flowpay-backend"

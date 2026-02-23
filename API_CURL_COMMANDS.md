@@ -1,6 +1,6 @@
-# PaymentFlow Backend API - cURL コマンド集
+# FlowPay Backend API - cURL コマンド集
 
-このドキュメントには、PaymentFlow BackendのすべてのAPIエンドポイントのcURLコマンドが含まれています。
+このドキュメントには、FlowPay BackendのすべてのAPIエンドポイントのcURLコマンドが含まれています。
 
 ## 基本情報
 

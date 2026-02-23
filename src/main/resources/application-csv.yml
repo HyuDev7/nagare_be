@@ -1,0 +1,16 @@
+spring:
+  config:
+    activate:
+      on-profile: csv
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+
+app:
+  storage:
+    type: csv
+
+csv:
+  data:
+    path: src/main/resources/data

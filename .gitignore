@@ -41,3 +41,6 @@ out/
 
 ### Data files ###
 src/main/resources/data/*.csv
+
+### Environment variables ###
+.env

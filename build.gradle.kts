@@ -6,9 +6,9 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "com.paymentflow"
+group = "com.flowpay"
 version = "0.0.1-SNAPSHOT"
-description = "Demo project for Spring Boot"
+description = "FlowPay - Smart payment flow tracking application"
 
 java {
 	toolchain {
