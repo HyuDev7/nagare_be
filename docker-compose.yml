@@ -3,9 +3,9 @@ version: '3.8'
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: paymentflow-postgres
+    container_name: nagare-postgres
     environment:
-      POSTGRES_DB: paymentflow
+      POSTGRES_DB: nagare
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       TZ: Asia/Tokyo

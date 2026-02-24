@@ -1,6 +1,6 @@
 # PostgreSQL Migration Guide
 
-このガイドでは、FlowPayアプリケーションをCSVストレージからPostgreSQLデータベースに移行する手順を説明します。
+このガイドでは、NagareアプリケーションをCSVストレージからPostgreSQLデータベースに移行する手順を説明します。
 
 ## 実装概要
 
@@ -21,7 +21,7 @@ Infrastructure Layer (CSV実装 ⇄ JPA実装)
 以下のコンポーネントが追加されました：
 
 #### 1. JPA Entity Classes
-`src/main/kotlin/com/flowpay/infrastructure/persistence/jpa/entity/`
+`src/main/kotlin/com/nagare/infrastructure/persistence/jpa/entity/`
 
 - `TransactionEntity` - 取引エンティティ
 - `AssetAccountEntity` - 資産アカウントエンティティ
@@ -34,7 +34,7 @@ Infrastructure Layer (CSV実装 ⇄ JPA実装)
 - `toDomain()` - エンティティからドメインモデルへの変換
 
 #### 2. Spring Data JPA Repository Interfaces
-`src/main/kotlin/com/flowpay/infrastructure/persistence/jpa/`
+`src/main/kotlin/com/nagare/infrastructure/persistence/jpa/`
 
 - `TransactionJpaRepository`
 - `AssetAccountJpaRepository`
@@ -43,7 +43,7 @@ Infrastructure Layer (CSV実装 ⇄ JPA実装)
 - `RecurringTransactionJpaRepository`
 
 #### 3. JPA Repository Implementations
-`src/main/kotlin/com/flowpay/infrastructure/persistence/jpa/`
+`src/main/kotlin/com/nagare/infrastructure/persistence/jpa/`
 
 - `JpaTransactionRepositoryImpl`
 - `JpaAssetAccountRepositoryImpl`
@@ -52,7 +52,7 @@ Infrastructure Layer (CSV実装 ⇄ JPA実装)
 - `JpaRecurringTransactionRepositoryImpl`
 
 #### 4. Configuration Class
-`src/main/kotlin/com/flowpay/presentation/config/RepositoryConfig.kt`
+`src/main/kotlin/com/nagare/presentation/config/RepositoryConfig.kt`
 
 Spring Profileに基づいてCSV実装とJPA実装を切り替える設定クラス。
 
@@ -81,7 +81,7 @@ docker-compose ps
 
 ```bash
 # PostgreSQLコンテナに接続
-docker exec -it flowpay-postgres psql -U postgres -d flowpay
+docker exec -it nagare-postgres psql -U postgres -d nagare
 
 # 接続確認
 \l  # データベース一覧
@@ -132,7 +132,7 @@ Hibernate: create table transactions ...
 ### 2. データベースを確認
 
 ```bash
-docker exec -it flowpay-postgres psql -U postgres -d flowpay
+docker exec -it nagare-postgres psql -U postgres -d nagare
 
 # テーブル一覧を確認
 \dt
@@ -220,7 +220,7 @@ lsof -i :5432
 ```yaml
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/flowpay
+    url: jdbc:postgresql://localhost:5433/nagare
 ```
 
 ### テーブルが作成されない
@@ -272,7 +272,7 @@ csv:
 spring:
   profiles: jpa
   datasource:
-    url: jdbc:postgresql://localhost:5432/flowpay
+    url: jdbc:postgresql://localhost:5432/nagare
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver

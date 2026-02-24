@@ -1,6 +1,6 @@
 spring:
   application:
-    name: flowpay-backend
+    name: nagare-backend
   main:
     allow-bean-definition-overriding: true
   profiles:

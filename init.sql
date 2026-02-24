@@ -1,4 +1,4 @@
--- PaymentFlow Database Initialization Script
+-- Nagare Database Initialization Script
 
 -- データベースが既に存在する場合は何もしない
 -- Docker Composeの環境変数で自動作成されるため、ここでは追加設定のみ
@@ -10,4 +10,4 @@ SET timezone = 'Asia/Tokyo';
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- ログ出力
-SELECT 'PaymentFlow database initialized successfully' AS message;
+SELECT 'Nagare database initialized successfully' AS message;

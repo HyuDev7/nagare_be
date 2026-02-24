@@ -3,7 +3,7 @@ spring:
     activate:
       on-profile: jpa
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/flowpay}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/nagare}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver

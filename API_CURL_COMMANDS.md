@@ -1,6 +1,6 @@
-# FlowPay Backend API - cURL コマンド集
+# Nagare Backend API - cURL コマンド集
 
-このドキュメントには、FlowPay BackendのすべてのAPIエンドポイントのcURLコマンドが含まれています。
+このドキュメントには、Nagare BackendのすべてのAPIエンドポイントのcURLコマンドが含まれています。
 
 ## 基本情報
 

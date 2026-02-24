@@ -22,7 +22,7 @@ docker-compose ps
 
 ```bash
 # PostgreSQLコンテナに接続
-docker exec -it flowpay-postgres psql -U postgres -d flowpay
+docker exec -it nagare-postgres psql -U postgres -d nagare
 
 # 接続確認用のクエリ
 \l  # データベース一覧
@@ -48,13 +48,13 @@ docker-compose down -v
 ### ローカル開発環境
 - **Host**: localhost
 - **Port**: 5432
-- **Database**: flowpay
+- **Database**: nagare
 - **User**: postgres
 - **Password**: postgres
 
 ### JDBC URL
 ```
-jdbc:postgresql://localhost:5432/flowpay
+jdbc:postgresql://localhost:5432/nagare
 ```
 
 ## ストレージタイプの切り替え
